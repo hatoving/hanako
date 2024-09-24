@@ -1,7 +1,7 @@
-#include "g_scene_boot.h"
+#include "s_boot.h"
 
-#include "../g_cursor.h"
-#include "../g_assets.h"
+#include "../game/g_cursor.h"
+#include "../m_assets.h"
 
 #include "../engine/e_core.h"
 
@@ -54,15 +54,15 @@ void AddTextToScreenOutput(char* text) {
     }   
 }
 
-void G_Scene_BootInit() {
-    G_CursorSetVisibility(false);
+void S_BootInit() {
+    G_Cursor_SetVisibility(false);
     ClearScreenOutput();
 
-    system_font = (Font*)G_GetAssetDataByLabel("preload/fnt/system");
-    beep_sound = (Sound*)G_GetAssetDataByLabel("preload/snd/beep");
+    system_font = (Font*)M_Assets_GetAssetDataByLabel("preload/fnt/system");
+    beep_sound = (Sound*)M_Assets_GetAssetDataByLabel("preload/snd/beep");
 
-    G_LoadAssetByLabel("boot/gfx/trophy");
-    trophy_graphic = (Texture2D*)G_GetAssetDataByLabel("boot/gfx/trophy");
+    M_Assets_LoadAssetByLabel("boot/gfx/trophy");
+    trophy_graphic = (Texture2D*)M_Assets_GetAssetDataByLabel("boot/gfx/trophy");
 }
 
 int intro_substep_count = 0; // we use this variable if we need to count something
@@ -84,7 +84,7 @@ void IntroWait(float wait_time) {
     }
 }
 
-void G_Scene_BootUpdate() {
+void S_BootUpdate() {
     switch(current_subscene) {
         case (int)SUBSCENE_INTRO: {
             switch (intro_step) {
@@ -213,7 +213,7 @@ void G_Scene_BootUpdate() {
     */
 }
 
-void G_Scene_BootDraw() {
+void S_BootDraw() {
     ClearBackground(BLACK);
 
     if (intro_step >= 1 && trophy_graphic != NULL) {
@@ -222,11 +222,11 @@ void G_Scene_BootDraw() {
     DrawTextEx(system_font != NULL ? *system_font : GetFontDefault(), screen_output, (Vector2){15, 15}, 16, 0, GRAY);
 }
 
-void G_Scene_BootClose() {
+void S_BootClose() {
     beep_sound = NULL;
     system_font = NULL;
 
-    G_CloseAssetByLabel("boot/gfx/trophy");
+    M_Assets_CloseAssetByLabel("boot/gfx/trophy");
     trophy_graphic = NULL;
 
     ClearScreenOutput();

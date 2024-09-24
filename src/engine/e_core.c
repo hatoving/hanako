@@ -1,7 +1,7 @@
 #include "e_core.h"
 #include "e_screen.h"
 
-#include "../g_global.h"
+#include "../m_global.h"
 
 #include <stdio.h>
 #include <raylib.h>
@@ -11,26 +11,26 @@ E_Scene* E_CORE_CURRENTSCENE = NULL;
 
 int screenshot_count = 0;
 
-void E_Init() {
+void E_Core_Init() {
     InitWindow(1280, 720, E_CORE_WINDOWTITLE);
     InitAudioDevice();
 
     SetWindowState(FLAG_WINDOW_RESIZABLE);
-    SetTargetFPS(G_BASE_FPS);
+    SetTargetFPS(M_BASE_FPS);
 
     HideCursor();
-    E_SCREEN_TEX = LoadRenderTexture(G_BASE_WIDTH, G_BASE_HEIGHT);
+    E_SCREEN_TEX = LoadRenderTexture(M_BASE_WIDTH, M_BASE_HEIGHT);
 
     SetExitKey(KEY_NULL);
 }
 
-void E_StartDrawing() {
+void E_Core_StartDrawing() {
     BeginTextureMode(E_SCREEN_TEX);
 }
 
-void E_HandleMiscInputs() {
+void E_Core_HandleMiscInputs() {
     if (IsKeyPressed(KEY_F11)) {
-        E_SetFullscreen(!E_SCREEN_FULLSCREEN);
+        E_Screen_SetFull(!E_SCREEN_FULLSCREEN);
     }
     if (IsKeyPressed(KEY_F12)) {
         TakeScreenshot(TextFormat("screenshot_%i.png", screenshot_count));
@@ -38,7 +38,7 @@ void E_HandleMiscInputs() {
     }
 }
 
-void E_SetScene(E_Scene* scene) {
+void E_Core_SetScene(E_Scene* scene) {
     if (E_CORE_CURRENTSCENE != NULL) {
         E_CORE_CURRENTSCENE->close();
         E_CORE_CURRENTSCENE = NULL;
@@ -54,28 +54,28 @@ void E_SetScene(E_Scene* scene) {
     }
 }
 
-void E_UpdateCurrentScene() {
+void E_Core_UpdateCurrentScene() {
     if (E_CORE_CURRENTSCENE != NULL) {
         E_CORE_CURRENTSCENE->update();
     }
 }
 
-void E_DrawCurrentScene() {
+void E_Core_DrawCurrentScene() {
     if (E_CORE_CURRENTSCENE != NULL) {
         E_CORE_CURRENTSCENE->draw();
     }
 }
 
-void E_EndDrawing() {
+void E_Core_EndDrawing() {
     EndTextureMode();
     
     BeginDrawing();
         ClearBackground(BLACK);
-        E_HandleScreen();
+        E_Screen_Handle();
     EndDrawing();
 }
 
-void E_Close() {
+void E_Core_Close() {
     if (E_CORE_CURRENTSCENE != NULL) {
         E_CORE_CURRENTSCENE->close();
         E_CORE_CURRENTSCENE = NULL;

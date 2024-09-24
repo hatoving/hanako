@@ -1,4 +1,4 @@
-#include "g_assets.h"
+#include "m_assets.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -17,7 +17,7 @@ E_AssetDescriptor asset_info_table[] = {
 E_Asset** assets = NULL;
 int asset_count = 0;
 
-void G_InitializeAssets() {
+void M_Assets_Init() {
     int asset_info_count = sizeof(asset_info_table) / sizeof(asset_info_table[0]);
     assets = (E_Asset**)malloc(asset_info_count * sizeof(E_Asset*));
 
@@ -31,7 +31,7 @@ void G_InitializeAssets() {
     printf("E: Total asset count -- %i\n", asset_count);
 }
 
-E_Asset* G_GetAssetByLabel(char* label) {
+E_Asset* M_Assets_GetAssetByLabel(char* label) {
     if (label != NULL && strlen(label) > 0) {
         for (int i = 0; i < asset_count; i++) {
             if (assets[i] != NULL && strcmp(assets[i]->info.label, label) == 0) {
@@ -42,7 +42,7 @@ E_Asset* G_GetAssetByLabel(char* label) {
     return NULL;
 }
 
-void* G_GetAssetDataByLabel(char* label) {
+void* M_Assets_GetAssetDataByLabel(char* label) {
     if (label != NULL && strlen(label) > 0) {
         for (int i = 0; i < asset_count; i++) {
             if (assets[i] != NULL && strcmp(assets[i]->info.label, label) == 0) {
@@ -55,7 +55,7 @@ void* G_GetAssetDataByLabel(char* label) {
     return NULL;
 }
 
-void G_LoadAssetByLabel(char* label) {
+void M_Assets_LoadAssetByLabel(char* label) {
     if (label != NULL && strlen(label) > 0) {
         for (int i = 0; i < asset_count; i++) {
             if (assets[i] != NULL && !assets[i]->is_loaded && strcmp(assets[i]->info.label, label) == 0) {
@@ -64,7 +64,7 @@ void G_LoadAssetByLabel(char* label) {
         }
     }
 }
-void G_CloseAssetByLabel(char* label) {
+void M_Assets_CloseAssetByLabel(char* label) {
     if (label != NULL && strlen(label) > 0) {
         for (int i = 0; i < asset_count; i++) {
             if (assets[i] != NULL && assets[i]->is_loaded && strcmp(assets[i]->info.label, label) == 0) {
@@ -74,7 +74,7 @@ void G_CloseAssetByLabel(char* label) {
     }
 }
 
-void G_CloseAssets() {
+void M_Assets_Close() {
     if (assets == NULL || asset_count == 0) {
         return;
     }

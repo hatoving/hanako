@@ -27,7 +27,7 @@ extern bool E_SCREEN_FULLSCREEN;
 extern float E_SCREEN_SCALE_X;
 extern float E_SCREEN_SCALE_Y;
 
-void E_HandleScreen();
-void E_SetFullscreen(bool on);
+void E_Screen_Handle();
+void E_Screen_SetFull(bool on);
 
 #endif

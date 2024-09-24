@@ -21,7 +21,10 @@ include(FetchContent)
     add_subdirectory(${raylib_SOURCE_DIR} ${raylib_BINARY_DIR})
   endif()
 
-# Our Project
+# e_ = Engine
+# s_ = Scene
+# g_ = Game
+# m_ = Main
 
 add_executable(${PROJECT_NAME}
     src/engine/e_math.c
@@ -30,13 +33,15 @@ add_executable(${PROJECT_NAME}
     src/engine/e_asset.c
     src/engine/e_core.c
 
-    src/scenes/g_scene_test.c
-    src/scenes/g_scene_boot.c
+    src/scenes/s_test.c
+    src/scenes/s_boot.c
 
-    src/g_cursor.c
-    src/g_scenes.c
-    src/g_assets.c
-    src/g_main.c
+    src/game/g_cursor.c
+
+    src/m_assets.c
+    src/m_scenes.c
+
+    src/m_main.c
 )
 
 target_link_libraries(${PROJECT_NAME}

@@ -2,7 +2,9 @@
     "files.associations": {
         "*.yarnproject": "jsonc",
         "e_screen.h": "c",
-        "g_scene_test.h": "c",
-        "stdlib.h": "c"
+        "s_test.h": "c",
+        "stdlib.h": "c",
+        "raylib.h": "c",
+        "e_scene.h": "c"
     }
 }
