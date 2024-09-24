@@ -11,7 +11,9 @@ E_Asset* E_Asset_Create(char* label, char* asset_path, E_AssetType type, bool pr
     asset->info.path = asset_path;
     asset->info.preload = preload;
 
-    //printf("E: Creating asset \"%s\" with type %i\n", asset->info.label, (int)asset->info.type);
+    asset->is_loaded = false;
+    printf("E: Creating asset \"%s\" with type %i\n", asset->info.label, (int)asset->info.type);
+
     return asset;
 }
 
@@ -25,16 +27,21 @@ void E_Asset_Load(E_Asset* asset) {
                 asset->is_loaded = true;
             } else {
                 printf("E: Memory allocation failed for sound asset \"%s\".", asset->info.label);
+                asset->data = NULL;
+                asset->is_loaded = false;
             }
             break;
         }
         case E_ASSET_TYPE_TEXTURE: {
-            Texture2D tex = LoadTexture(asset->info.path);
-            if (tex.id > 0) {
-                asset->data = (void*)&tex;
+            Texture2D* tex = malloc(sizeof(Texture2D));
+            if (tex != NULL) {
+                *tex = LoadTexture(asset->info.path);
+                asset->data = (void*)tex;
                 asset->is_loaded = true;
             } else {
-                printf("Error: Failed to load texture from %s\n", asset->info.path);
+                printf("E: Memory allocation failed for texture asset \"%s\".", asset->info.label);
+                asset->data = NULL;
+                asset->is_loaded = false;
             }
             break;
         }
@@ -46,11 +53,15 @@ void E_Asset_Load(E_Asset* asset) {
                 asset->is_loaded = true;
             } else {
                 printf("E: Memory allocation failed for font asset \"%s\".", asset->info.label);
+                asset->data = NULL;
+                asset->is_loaded = false;
             }
             break;
         }
         default: {
             printf("E: Invalid type for \"%s\" at \"%s\".", asset->info.label, asset->info.path);
+            asset->data = NULL;
+            asset->is_loaded = false;
             break;
         }
     }

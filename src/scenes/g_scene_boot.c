@@ -61,8 +61,8 @@ void G_Scene_BootInit() {
     system_font = (Font*)G_GetAssetDataByLabel("preload/fnt/system");
     beep_sound = (Sound*)G_GetAssetDataByLabel("preload/snd/beep");
 
-    //G_LoadAssetByLabel("boot/gfx/trophy");
-    //trophy_graphic = (Texture2D*)G_GetAssetDataByLabel("boot/gfx/trophy");
+    G_LoadAssetByLabel("boot/gfx/trophy");
+    trophy_graphic = (Texture2D*)G_GetAssetDataByLabel("boot/gfx/trophy");
 }
 
 int intro_substep_count = 0; // we use this variable if we need to count something
@@ -94,7 +94,7 @@ void G_Scene_BootUpdate() {
                 }
                 case 1: {
                     if (!intro_wait) {
-                        AddTextToScreenOutput("(press ENTER to skip)\n\nTrophy Personal BIOS v2.34\nCopyright (C) 1987-94 Trophy Software\n\n");
+                        AddTextToScreenOutput("(press ENTER to skip)\n\n\t\t\t\t\t\tTrophy Personal BIOS v2.34\n\t\t\t\t\t\tCopyright (C) 1987-94 Trophy Software\n\n");
                         PlaySound(*beep_sound);
                     }
                     IntroWait(1.0f);
@@ -215,12 +215,19 @@ void G_Scene_BootUpdate() {
 
 void G_Scene_BootDraw() {
     ClearBackground(BLACK);
+
+    if (intro_step >= 1 && trophy_graphic != NULL) {
+        DrawTexture(*trophy_graphic, 16, 43, WHITE);
+    }
     DrawTextEx(system_font != NULL ? *system_font : GetFontDefault(), screen_output, (Vector2){15, 15}, 16, 0, GRAY);
 }
 
 void G_Scene_BootClose() {
     beep_sound = NULL;
     system_font = NULL;
+
+    G_CloseAssetByLabel("boot/gfx/trophy");
+    trophy_graphic = NULL;
 
     ClearScreenOutput();
 }

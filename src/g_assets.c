@@ -25,8 +25,6 @@ void G_InitializeAssets() {
         assets[i] = E_Asset_Create(asset_info_table[i].label, asset_info_table[i].path, asset_info_table[i].type, asset_info_table[i].preload);
         if (assets[i]->info.preload) {
             E_Asset_Load(assets[i]);
-        } else {
-            assets[i]->is_loaded = false;
         }
         asset_count++;
     }
@@ -57,11 +55,35 @@ void* G_GetAssetDataByLabel(char* label) {
     return NULL;
 }
 
+void G_LoadAssetByLabel(char* label) {
+    if (label != NULL && strlen(label) > 0) {
+        for (int i = 0; i < asset_count; i++) {
+            if (assets[i] != NULL && !assets[i]->is_loaded && strcmp(assets[i]->info.label, label) == 0) {
+                E_Asset_Load(assets[i]);
+            }
+        }
+    }
+}
+void G_CloseAssetByLabel(char* label) {
+    if (label != NULL && strlen(label) > 0) {
+        for (int i = 0; i < asset_count; i++) {
+            if (assets[i] != NULL && assets[i]->is_loaded && strcmp(assets[i]->info.label, label) == 0) {
+                E_Asset_Close(assets[i]);
+            }
+        }
+    }
+}
+
 void G_CloseAssets() {
+    if (assets == NULL || asset_count == 0) {
+        return;
+    }
+    
     for (int i = 0; i < asset_count; i++) {
         if (assets[i] != NULL) {
             if (assets[i]->is_loaded) {
                 E_Asset_Close(assets[i]);
+                assets[i]->is_loaded = false;
             }
             free(assets[i]);
             assets[i] = NULL;
@@ -69,4 +91,6 @@ void G_CloseAssets() {
     }
     free(assets);
     assets = NULL;
+
+    asset_count = 0;
 }
