@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.yarnproject": "jsonc",
+        "e_screen.h": "c",
+        "g_scene_test.h": "c",
+        "stdlib.h": "c"
+    }
+}
