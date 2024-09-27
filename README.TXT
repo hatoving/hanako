@@ -1,6 +1,6 @@
 ~~ PREAMBLE ~~
 
-Here it is: the entire source for "Hanako," my psycological horror game. Pretty much all of the game as of writing this is written in C using the "raylib" framework, so anyone who wants to take a crack at modifying the game or just analyze how it's written. I should note however that Hanako's code is not perfect; there may be some things here that will make the experinced C developer puke in front of their entire keyboard, so take that as you will. Another thing I will note is that you NEED THE ORIGINAL GAME FILES. I'm very much not trying to hide them (since they're scattered around in .PNGs, .OGGs and whatnot), but you need the files either way to make the build work (or, you could try to recreate all of them by youself, but who would do that?)
+Here it is: the entire source for "Hanako," my psycological horror game. Pretty much all of the game as of writing this is written in C using the "raylib" framework, so anyone who wants to take a crack at modifying the game or just analyze how it's written. I should note however that Hanako's code is not perfect; there may be some things here that will make the experinced C developer puke in front of their entire keyboard, so take that as you will. Another important point: you will need the original game files. These aren't hidden or anything— (since they're scattered around in .PNGs, .OGGs and whatnot), but you need the files either way to make the build work (or, you could try to recreate all of them by youself, but who would do that?)
 
 Now, Hanako isn't a very "flexible" game in my eyes, so I'm not sure what the community could do with this in the case of modding, however, I can think of a few things that the community COULD do with the code:
 
@@ -13,3 +13,7 @@ Point is, I belive in open-source software. You may do whatever you want with th
 
 -Attila "hatoving" Kuti
 9/25/24
+
+~~ GAME DESCRIPTION ~~
+
+In 1996, "Hanako" was released, quickly becoming known as one of the most engaging and innovative educational games of its time. But behind its success, the developers revealed that much had been cut to make it run on personal computers. Just a few weeks later, an unreleased beta version surfaced online. Surely, it’s just some extra content... right?

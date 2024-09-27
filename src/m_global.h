@@ -6,4 +6,6 @@
 
 #define M_BASE_FPS      60
 
+extern const char* M_BASE_DATAPATH;
+
 #endif

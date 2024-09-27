@@ -1,8 +1,13 @@
 #include "s_boot.h"
 
+#include "../game/g_game.h"
 #include "../game/g_cursor.h"
+
+#include "../m_global.h"
 #include "../m_assets.h"
 
+#include "../engine/e_math.h"
+#include "../engine/e_draw.h"
 #include "../engine/e_core.h"
 
 #include <stdio.h>
@@ -12,16 +17,18 @@
 #include <raylib.h>
 
 typedef enum {
+    SUBSCENE_SPLASH,
     SUBSCENE_INTRO,
-    SUBSCENE_LOAD,
+    SUBSCENE_LOADING
 };
 
-int current_subscene = (int)SUBSCENE_INTRO;
-int intro_step = 0;
-bool intro_wait = false;
-float intro_wait_time = 0.0f;
+int current_subscene = (int)SUBSCENE_SPLASH;
 
-int boot1_current_index = 0;
+int current_step = 0;
+bool wait_for_timer = false;
+float timer = 0.0f;
+
+int boot1_mem_check_cap = 65536;
 float boot1_mem_check = 0;
 
 int current_letter_count = 0;
@@ -33,7 +40,7 @@ bool done_adding_msg = false;
     38 lines to fill up the whole screen
     77 * 38 = 2926 avaialble characters + 1 for the null terminator
  */
-char screen_output[(77 * 38) + 1];
+char screen_output[2927];
 void ClearScreenOutput() {
     screen_output[0] = '\0';
     current_index_to_add = 0;   
@@ -41,9 +48,15 @@ void ClearScreenOutput() {
 }
 
 Sound* beep_sound;
+Sound* power_button;
 Font* system_font;
 
 Texture2D* trophy_graphic;
+Texture2D* hat_logo;
+Texture2D* starlight_bg;
+
+float loading_bar_x = 0;
+Texture2D* starlight_loading_bar;
 
 void AddTextToScreenOutput(char* text) {
     size_t len = strlen(text);
@@ -60,51 +73,86 @@ void S_BootInit() {
 
     system_font = (Font*)M_Assets_GetAssetDataByLabel("preload/fnt/system");
     beep_sound = (Sound*)M_Assets_GetAssetDataByLabel("preload/snd/beep");
+    power_button = (Sound*)M_Assets_GetAssetDataByLabel("preload/snd/power_button");
 
     M_Assets_LoadAssetByLabel("boot/gfx/trophy");
     trophy_graphic = (Texture2D*)M_Assets_GetAssetDataByLabel("boot/gfx/trophy");
+    M_Assets_LoadAssetByLabel("boot/gfx/hat_logo");
+    hat_logo = (Texture2D*)M_Assets_GetAssetDataByLabel("boot/gfx/hat_logo");
+
+    M_Assets_LoadAssetByLabel("boot/gfx/starlight_bg");
+    starlight_bg = (Texture2D*)M_Assets_GetAssetDataByLabel("boot/gfx/starlight_bg");
+    M_Assets_LoadAssetByLabel("boot/gfx/starlight_loadbar");
+    starlight_loading_bar = (Texture2D*)M_Assets_GetAssetDataByLabel("boot/gfx/starlight_loadbar");
+
+    PlaySound(*power_button);
 }
 
-int intro_substep_count = 0; // we use this variable if we need to count something
+int intro_substep_count = 0; // we use this variable if we need to count something in the intro
 float intro_substep_wait = 0.5f;
 int intro_substep_done = false;
-void IntroWait(float wait_time) {
-    if (!intro_wait) {
-        intro_wait_time = wait_time;
-        intro_wait = true;
+void WaitForTimer(float wait_time) {
+    if (!wait_for_timer) {
+        timer = wait_time;
+        wait_for_timer = true;
     } else {
-        if (intro_wait_time <= 0.0f) {
-            intro_step++;
+        if (timer <= 0.0f) {
+            current_step++;
 
-            intro_wait = false;
+            wait_for_timer = false;
             intro_substep_done = false;
         } else {
-            intro_wait_time -= GetFrameTime();
+            timer -= GetFrameTime();
         }
     }
 }
 
 void S_BootUpdate() {
     switch(current_subscene) {
-        case (int)SUBSCENE_INTRO: {
-            switch (intro_step) {
-                case 0: {
-                    IntroWait(2.0f);
+        case (int)SUBSCENE_SPLASH: {
+            switch(current_step) {
+                case 0:
+                case 2: {
+                    WaitForTimer(1.0f);
                     break;
                 }
                 case 1: {
-                    if (!intro_wait) {
+                    WaitForTimer(3.0f);
+                    break;
+                }
+                case 3: {
+                    current_step = 0;
+                    wait_for_timer = false;
+                    current_subscene = SUBSCENE_INTRO;
+                    break;
+                }
+            }
+            break;
+        }
+        case (int)SUBSCENE_INTRO: {
+            if (IsKeyPressed(KEY_ENTER)) {
+                wait_for_timer = false;
+                current_step = 5;
+                PlaySound(*beep_sound);
+            }
+            switch (current_step) {
+                case 0: {
+                    WaitForTimer(2.0f);
+                    break;
+                }
+                case 1: {
+                    if (!wait_for_timer) {
                         AddTextToScreenOutput("(press ENTER to skip)\n\n\t\t\t\t\t\tTrophy Personal BIOS v2.34\n\t\t\t\t\t\tCopyright (C) 1987-94 Trophy Software\n\n");
                         PlaySound(*beep_sound);
                     }
-                    IntroWait(1.0f);
+                    WaitForTimer(1.0f);
                     break;
                 }
                 case 2: {
-                    if (!intro_wait) {
+                    if (!wait_for_timer) {
                         AddTextToScreenOutput("Initializing BOOT sequence");
                         PlaySound(*beep_sound);
-                        intro_wait = true;
+                        wait_for_timer = true;
                     }
 
                     if (intro_substep_wait > 0.0f) {
@@ -113,26 +161,28 @@ void S_BootUpdate() {
                         intro_substep_count++;
 
                         if (intro_substep_count >= 4) {
-                            intro_step++;
-                            intro_wait = false;
+                            current_step++;
+                            wait_for_timer = false;
                             intro_substep_count = 0;
                         } else {
                             AddTextToScreenOutput(".");
                             intro_substep_wait = 0.5f;
                         }
                     }
-                    //IntroWait(1.5f);
+                    //WaitForTimer(1.5f);
                     break;
                 }
                 case 3: {
                     if (!intro_substep_done) {
-                        if (!intro_wait) {
-                            AddTextToScreenOutput("\n\nMemory Check : \t\t");
+                        if (!wait_for_timer) {
+                            AddTextToScreenOutput("\nMemory Check : \t\t");
                             PlaySound(*beep_sound);
-                            intro_wait = true;
+                            wait_for_timer = true;
                         }
-                        if (boot1_mem_check < 8192) {
-                            boot1_mem_check += 10000.0f * GetFrameTime();
+                        if (boot1_mem_check < (float)boot1_mem_check_cap) {
+                            boot1_mem_check += 100000.0f * GetFrameTime();
+                            boot1_mem_check = E_Math_Clamp(boot1_mem_check, 0.0f, (float)boot1_mem_check_cap);
+
                             char* mem_check_str = TextFormat("%i", (int)floor(boot1_mem_check));
                             int mem_check_strlen = strlen(mem_check_str);
 
@@ -148,27 +198,33 @@ void S_BootUpdate() {
                             }
 
                             intro_substep_count = mem_check_strlen;
-                        } else if (boot1_mem_check >= 8192) {
-                            boot1_mem_check = 8192;
+                        } else if (boot1_mem_check >= (float)boot1_mem_check_cap) {
+                            boot1_mem_check = (int)boot1_mem_check_cap;
 
-                            intro_wait = false;
+                            wait_for_timer = false;
                             intro_substep_done = true;
 
-                            AddTextToScreenOutput("kb\tOK\n");
+                            AddTextToScreenOutput("kb\tOK\n\n");
                             PlaySound(*beep_sound);
                         }
                     }
                     if (intro_substep_done) {
-                        IntroWait(2.0f);
+                        WaitForTimer(2.0f);
                     }
                     break;
                 }
                 case 4: {
-                    if (!intro_wait) {
-                        AddTextToScreenOutput("dumbass\n");
+                    if (!wait_for_timer) {
+                        AddTextToScreenOutput("Booting Starlight Personal...\n");
                         PlaySound(*beep_sound);
                     }
-                    IntroWait(1.0f);
+                    WaitForTimer(2.0f);
+                    break;
+                }
+                case 5: {
+                    current_step = 0;
+                    wait_for_timer = false;
+                    current_subscene = SUBSCENE_LOADING;
                     break;
                 }
                 default: {
@@ -177,57 +233,93 @@ void S_BootUpdate() {
             }
             break;
         }
-    }
-
-    /*if (msg_char_countdown <= 0.0f) {
-        if (current_index_to_add < strlen(step1_messages[step1_current_index]) && !done_adding_msg) {
-            char to_add = (step1_messages[step1_current_index])[current_index_to_add];
-
-            screen_output[current_letter_count] = to_add;
-            screen_output[current_letter_count + 1] = '\0';
-            current_letter_count++;
-            current_index_to_add++;
-
-            if (to_add != '\n' || to_add != '\t') {
-                PlaySound(text_sfx);
+        case (int)SUBSCENE_LOADING: {
+            loading_bar_x -= 200.0f * GetFrameTime();
+            if (floor(loading_bar_x) <= -starlight_loading_bar->width) {
+                loading_bar_x = 0;
             }
-            msg_char_countdown = msg_speed;
-        } else {
-            done_adding_msg = true;
-        }
-    } else {
-        msg_char_countdown -= GetFrameTime();
-    }
 
-    if (IsKeyPressed(KEY_ENTER) && done_adding_msg) {
-        step1_current_index++;
-        done_adding_msg = false;
-        current_index_to_add = 0;
-
-        if (step1_current_index >= sizeof(step1_messages) / sizeof(step1_messages[0])) {
-            ClearScreenOutput();
-            step1_current_index = 0;
+            switch(current_step) {
+                case 0: {
+                    WaitForTimer(3.0f);
+                    break;
+                }
+                case 1: {
+                    if (!wait_for_timer) {
+                        G_HardDriveSound(true);
+                    }
+                    WaitForTimer(5.0f);
+                    break;
+                }
+                case 2: {
+                    G_HardDriveSound(false);
+                    G_Cursor_SetVisibility(true);
+                    E_Core_SetScene(NULL);
+                    break;
+                }
+            }
+            break;
         }
     }
-        Commenting this out and leaving it in, in case I need it later
-    */
 }
 
 void S_BootDraw() {
     ClearBackground(BLACK);
 
-    if (intro_step >= 1 && trophy_graphic != NULL) {
-        DrawTexture(*trophy_graphic, 16, 43, WHITE);
+    switch(current_subscene) {
+        case (int)SUBSCENE_SPLASH: {
+            if(current_step == 1) {
+                DrawTexturePro(
+                    *hat_logo,
+                    (Rectangle){0, 0, hat_logo->width, hat_logo->height},
+                    (Rectangle){
+                        M_BASE_WIDTH / 2, M_BASE_HEIGHT / 2,
+                        hat_logo->width * 2, hat_logo->height * 2
+                    },
+                    (Vector2){hat_logo->width, hat_logo->height},
+                    0.0f, WHITE
+                );
+            }
+            break;
+        }
+        case (int)SUBSCENE_INTRO: {
+            if (current_step >= 1 && trophy_graphic != NULL) {
+                DrawTexture(*trophy_graphic, 16, 43, WHITE);
+            }
+            DrawTextEx(system_font != NULL ? *system_font : GetFontDefault(), screen_output, (Vector2){15, 15}, 16, 0, GRAY);
+            break;
+        }
+        case (int)SUBSCENE_LOADING: {
+            /* 0, 459 */
+            if (current_step == 1) {
+                DrawTexture(*starlight_bg, 0, 0, WHITE);
+                DrawTextureTiled(
+                    *starlight_loading_bar,
+                    (Rectangle){0, 0, starlight_loading_bar->width, starlight_loading_bar->height},
+                    (Rectangle){floorf(loading_bar_x), M_BASE_HEIGHT - starlight_loading_bar->height, starlight_loading_bar->width * 2, starlight_loading_bar->height},
+                    (Vector2){0.0f, 0.0f},
+                    0.0f, 1.0f, WHITE
+                );
+            }
+            //DrawTextEx(system_font != NULL ? *system_font : GetFontDefault(), screen_output, (Vector2){15, 15}, 16, 0, GRAY);
+            break;
+        }
     }
-    DrawTextEx(system_font != NULL ? *system_font : GetFontDefault(), screen_output, (Vector2){15, 15}, 16, 0, GRAY);
+    //DrawText(TextFormat("%i, %f", current_step, timer), 10, 10, 10, RED);
 }
 
 void S_BootClose() {
     beep_sound = NULL;
     system_font = NULL;
 
+    M_Assets_CloseAssetByLabel("boot/gfx/starlight_loadbar");
+    starlight_loading_bar = NULL;
+    M_Assets_CloseAssetByLabel("boot/gfx/starlight_bg");
+    starlight_bg = NULL;
     M_Assets_CloseAssetByLabel("boot/gfx/trophy");
     trophy_graphic = NULL;
+    M_Assets_CloseAssetByLabel("boot/gfx/hat_logo");
+    hat_logo = NULL;
 
     ClearScreenOutput();
 }

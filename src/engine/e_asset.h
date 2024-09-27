@@ -4,9 +4,10 @@
 #include <raylib.h>
 
 typedef enum {
-    E_ASSET_TYPE_SOUND,
-    E_ASSET_TYPE_FONT,
-    E_ASSET_TYPE_TEXTURE
+    E_ASSET_TYPE_SOUND, // Returns a raylib Sound struct
+    E_ASSET_TYPE_MUSIC, // Returns a raylib Music struct
+    E_ASSET_TYPE_FONT, // Retuns a raylib Font struct
+    E_ASSET_TYPE_TEXTURE // Retuns a raylib Texture2D struct
 } E_AssetType;
 
 typedef struct {

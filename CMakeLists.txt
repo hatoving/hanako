@@ -31,15 +31,19 @@ add_executable(${PROJECT_NAME}
     src/engine/e_scene.c
     src/engine/e_screen.c
     src/engine/e_asset.c
+    src/engine/e_draw.c
     src/engine/e_core.c
 
     src/scenes/s_test.c
     src/scenes/s_boot.c
 
-    src/game/g_cursor.c
-
+    src/m_global.c
     src/m_assets.c
     src/m_scenes.c
+
+    src/game/g_cursor.c
+    src/game/g_keyboard.c
+    src/game/g_game.c
 
     src/m_main.c
 )

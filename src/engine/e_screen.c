@@ -4,7 +4,7 @@
 #include "../m_global.h"
 #include "e_screen.h"
 
-E_SCREEN_RM E_SCREEN_CURRENT_RM = E_SCREEN_RM_FIT;
+E_SCREEN_RM E_SCREEN_CURRENT_RM = E_SCREEN_RM_PIXEL;
 RenderTexture2D E_SCREEN_TEX;
 
 bool E_SCREEN_FULLSCREEN = false;

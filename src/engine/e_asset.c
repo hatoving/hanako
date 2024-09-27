@@ -1,4 +1,5 @@
 #include "e_asset.h"
+#include "../m_global.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,7 +23,7 @@ void E_Asset_Load(E_Asset* asset) {
         case E_ASSET_TYPE_SOUND: {
             Sound* snd = malloc(sizeof(Sound));
             if (snd != NULL) {
-                *snd = LoadSound(asset->info.path);
+                *snd = LoadSound(TextFormat(asset->info.path, M_BASE_DATAPATH));
                 asset->data = (void*)snd;
                 asset->is_loaded = true;
             } else {
@@ -32,10 +33,23 @@ void E_Asset_Load(E_Asset* asset) {
             }
             break;
         }
+        case E_ASSET_TYPE_MUSIC: {
+            Music* snd = malloc(sizeof(Music));
+            if (snd != NULL) {
+                *snd = LoadMusicStream(TextFormat(asset->info.path, M_BASE_DATAPATH));
+                asset->data = (void*)snd;
+                asset->is_loaded = true;
+            } else {
+                printf("E: Memory allocation failed for music asset \"%s\".", asset->info.label);
+                asset->data = NULL;
+                asset->is_loaded = false;
+            }
+            break;
+        }
         case E_ASSET_TYPE_TEXTURE: {
             Texture2D* tex = malloc(sizeof(Texture2D));
             if (tex != NULL) {
-                *tex = LoadTexture(asset->info.path);
+                *tex = LoadTexture(TextFormat(asset->info.path, M_BASE_DATAPATH));
                 asset->data = (void*)tex;
                 asset->is_loaded = true;
             } else {
@@ -48,7 +62,7 @@ void E_Asset_Load(E_Asset* asset) {
         case E_ASSET_TYPE_FONT: {
             Font* fnt = malloc(sizeof(Font));
             if (fnt != NULL) {
-                *fnt = LoadFont(asset->info.path);
+                *fnt = LoadFont(TextFormat(asset->info.path, M_BASE_DATAPATH));
                 asset->data = (void*)fnt;
                 asset->is_loaded = true;
             } else {
@@ -69,32 +83,31 @@ void E_Asset_Load(E_Asset* asset) {
 
 
 void E_Asset_Close(E_Asset* asset) {
-    if (asset == NULL) return;
+    if (asset == NULL && asset->data == NULL) return;
     
     switch (asset->info.type) {
         case E_ASSET_TYPE_SOUND: {
-            if (asset->data != NULL) {
+            if (asset->data != NULL)
                 UnloadSound(*(Sound*)asset->data);
-                asset->data = NULL;
-            }
-            asset->is_loaded = false;
+            break;
+        }
+        case E_ASSET_TYPE_MUSIC: {
+            if (asset->data != NULL)
+                UnloadMusicStream(*(Music*)asset->data);
             break;
         }
         case E_ASSET_TYPE_TEXTURE: {
-            if (asset->data != NULL) {
+            if (asset->data != NULL)
                 UnloadTexture(*(Texture2D*)asset->data);
-                asset->data = NULL;
-            }
-            asset->is_loaded = false;
             break;
         }
         case E_ASSET_TYPE_FONT: {
-            if (asset->data != NULL) {
+            if (asset->data != NULL)
                 UnloadFont(*(Font*)asset->data);
-                asset->data = NULL;
-            }
-            asset->is_loaded = false;
             break;
         }
     }
+
+    asset->data = NULL;
+    asset->is_loaded = false;
 }
