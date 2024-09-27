@@ -41,6 +41,7 @@ add_executable(${PROJECT_NAME}
     src/m_assets.c
     src/m_scenes.c
 
+    src/game/g_settings.c
     src/game/g_cursor.c
     src/game/g_keyboard.c
     src/game/g_game.c

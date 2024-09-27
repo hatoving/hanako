@@ -22,20 +22,20 @@ E_AssetDescriptor asset_info_table[] = {
 	{ "preload/fnt/system", "%s/preload/fonts/system.ttf", E_ASSET_TYPE_FONT, true },
 
 		/* preload assets ~~ borders */
-	{ "preload/gfx/borders/0", "%s/preload/graphics/borders/simple.png", E_ASSET_TYPE_TEXTURE, true },
+	{ "preload/gfx/borders/1", "%s/preload/graphics/borders/simple.png", E_ASSET_TYPE_TEXTURE, true },
 
 	/* boot sequence */
-	{ "boot/gfx/hat_logo", "%s/main/boot/graphics/hatoving.png", E_ASSET_TYPE_TEXTURE, false },
-	{ "boot/gfx/trophy", "%s/main/boot/graphics/trophy.png", E_ASSET_TYPE_TEXTURE, false },
-	{ "boot/gfx/starlight_bg", "%s/main/boot/graphics/loading.png", E_ASSET_TYPE_TEXTURE, false },
-	{ "boot/gfx/starlight_loadbar", "%s/main/boot/graphics/loading_bar.png", E_ASSET_TYPE_TEXTURE, false },
+	{ "boot/gfx/hat_logo", "%s/boot/graphics/hatoving.png", E_ASSET_TYPE_TEXTURE, false },
+	{ "boot/gfx/trophy", "%s/boot/graphics/trophy.png", E_ASSET_TYPE_TEXTURE, false },
+	{ "boot/gfx/starlight_bg", "%s/boot/graphics/loading.png", E_ASSET_TYPE_TEXTURE, false },
+	{ "boot/gfx/starlight_loadbar", "%s/boot/graphics/loading_bar.png", E_ASSET_TYPE_TEXTURE, false },
 };
 
 E_Asset** assets = NULL;
 int asset_count = 0;
 
 void M_Assets_Init() {
-	printf("/// ~~ INITIALIZING ASSETS ~~ ///\n");
+	printf("\n/// ~~ INITIALIZING ASSETS ~~ ///\n");
 
 	int asset_info_count = sizeof(asset_info_table) / sizeof(asset_info_table[0]);
 	assets = (E_Asset**)malloc(asset_info_count * sizeof(E_Asset*));

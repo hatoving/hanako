@@ -4,6 +4,8 @@
 #include "../m_global.h"
 #include "../m_assets.h"
 
+#include "../game/g_settings.h"
+
 #include <stdio.h>
 #include <raylib.h>
 
@@ -22,7 +24,7 @@ void E_Core_Init() {
 	SetWindowState(FLAG_WINDOW_RESIZABLE);
 	SetTargetFPS(M_BASE_FPS);
 
-	E_Screen_SetFull(true);
+	E_Screen_SetFull(G_SETTINGS_CURRENT->fullscreen);
 	HideCursor();
 
 	E_SCREEN_TEX = LoadRenderTexture(M_BASE_WIDTH, M_BASE_HEIGHT);
@@ -37,7 +39,7 @@ void E_Core_StartDrawing() {
 
 void E_Core_HandleMiscInputs() {
 	if (IsKeyPressed(KEY_F11)) {
-		E_Screen_SetFull(!E_SCREEN_FULLSCREEN);
+		E_Screen_SetFull(!G_SETTINGS_CURRENT->fullscreen);
 	}
 	if (IsKeyPressed(KEY_F12)) {
 		TakeScreenshot("screenshot_.png");
@@ -79,24 +81,26 @@ void E_Core_EndDrawing() {
 	
 	BeginDrawing();
 		ClearBackground(BLACK);
-		if (E_SCREEN_CURRENT_RM == E_SCREEN_RM_PIXEL) {
-			if (current_border == NULL) {
-				current_border = (Texture2D*)M_Assets_GetAssetDataByLabel("preload/gfx/borders/0");
+		if (G_SETTINGS_CURRENT->current_render_mode == E_SCREEN_RM_PIXEL) {
+			if (G_SETTINGS_CURRENT->current_border != 0) {
+				current_border = (Texture2D*)M_Assets_GetAssetDataByLabel(TextFormat("preload/gfx/borders/%i", G_SETTINGS_CURRENT->current_border));
 			}
-			DrawTexturePro(
-				*current_border,
-				(Rectangle){
-					0, 0, current_border->width, current_border->height,
-				},
-				(Rectangle) {
-					(GetScreenWidth() / 2),
-					(GetScreenHeight() / 2),
-					(current_border->width * E_SCREEN_SCALE_X),
-					(current_border->height * E_SCREEN_SCALE_Y)
-				},
-				(Vector2){(current_border->width / 2) * E_SCREEN_SCALE_X, (current_border->height / 2) * E_SCREEN_SCALE_Y},
-				0.0f, WHITE
-			);
+			if (current_border != NULL) {
+				DrawTexturePro(
+					*current_border,
+					(Rectangle){
+						0, 0, current_border->width, current_border->height,
+					},
+					(Rectangle) {
+						(GetScreenWidth() / 2),
+						(GetScreenHeight() / 2),
+						(current_border->width * E_SCREEN_SCALE_X),
+						(current_border->height * E_SCREEN_SCALE_Y)
+					},
+					(Vector2){(current_border->width / 2) * E_SCREEN_SCALE_X, (current_border->height / 2) * E_SCREEN_SCALE_Y},
+					0.0f, WHITE
+				);
+			}
 		}
 
 		E_Screen_Handle();

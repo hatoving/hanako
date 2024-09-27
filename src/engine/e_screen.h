@@ -13,10 +13,7 @@ typedef enum {
 	E_SCREEN_RM_COUNT
 } E_SCREEN_RM;
 
-extern E_SCREEN_RM E_SCREEN_CURRENT_RM;
 extern RenderTexture2D E_SCREEN_TEX;
-
-extern bool E_SCREEN_FULLSCREEN;
 
 /*
 	Gets set by the engine to be used

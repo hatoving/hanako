@@ -2,31 +2,29 @@
 #include <stdlib.h>
 
 #include "../m_global.h"
+#include "../game/g_settings.h"
 #include "e_screen.h"
 
-E_SCREEN_RM E_SCREEN_CURRENT_RM = E_SCREEN_RM_PIXEL;
 RenderTexture2D E_SCREEN_TEX;
-
-bool E_SCREEN_FULLSCREEN = false;
 
 float E_SCREEN_SCALE_X = .0f;
 float E_SCREEN_SCALE_Y = .0f;
 
 void E_Screen_SetFull(bool on) {
-	E_SCREEN_FULLSCREEN = on;
+	G_SETTINGS_CURRENT->fullscreen = on;
 
-	if (E_SCREEN_FULLSCREEN) {
+	if (G_SETTINGS_CURRENT->fullscreen) {
 		SetWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
 	} else {
 		SetWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
 		ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
 	}
 
-	printf("E: Setting fullscreen... %i\n", (int)E_SCREEN_FULLSCREEN);
+	printf("E: Setting fullscreen... %i\n", (int)G_SETTINGS_CURRENT->fullscreen);
 }
 
 void E_Screen_Handle() {
-	switch (E_SCREEN_CURRENT_RM) {
+	switch (G_SETTINGS_CURRENT->current_render_mode) {
 		case E_SCREEN_RM_PIXEL: {
 			int scale_x = GetScreenWidth() / M_BASE_WIDTH;
 			int scale_y = GetScreenHeight() / M_BASE_HEIGHT;

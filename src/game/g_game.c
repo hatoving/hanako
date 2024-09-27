@@ -1,6 +1,7 @@
 #include "g_game.h"
 
 #include "g_keyboard.h"
+#include "g_settings.h"
 #include "g_cursor.h"
 
 #include "../m_global.h"
@@ -36,18 +37,16 @@ void G_Close() {
 	M_Assets_Close();
 
 	E_Core_Close();
+	G_Settings_Close();
 }
 
 void G_Loop() {
 	while(!WindowShouldClose()) {
 		E_Core_HandleMiscInputs();
-
 		E_Core_UpdateCurrentScene();
 
 		G_Cursor_Update();
 		G_Keyboard_Update();
-
-		UpdateMusicStream(*computer_ambience);
 
 		if (hdd_ambience_fade_in) {
 			hdd_ambience_volume += 0.1f * GetFrameTime();
@@ -55,8 +54,11 @@ void G_Loop() {
 			hdd_ambience_volume -= 0.1f * GetFrameTime();
 		}
 		hdd_ambience_volume = E_Math_Clamp(hdd_ambience_volume, 0.0f, 1.0f);
-		SetMusicVolume(*hdd_ambience, hdd_ambience_volume);
 
+		SetMusicVolume(*computer_ambience, G_SETTINGS_CURRENT->ambience_volume);
+		SetMusicVolume(*hdd_ambience, hdd_ambience_volume * G_SETTINGS_CURRENT->ambience_volume);
+
+		UpdateMusicStream(*computer_ambience);
 		UpdateMusicStream(*hdd_ambience);
 
 		E_Core_StartDrawing();
@@ -69,6 +71,8 @@ void G_Loop() {
 }
 
 void G_Run() {
+	G_Settings_Load();
+
 	E_Core_Init();
 	M_Assets_Init();
 
