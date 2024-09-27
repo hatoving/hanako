@@ -21,15 +21,15 @@ bool hdd_ambience_fade_in = false;
 Music* hdd_ambience = NULL;
 
 void G_Close() {
-    StopMusicStream(*computer_ambience);
-    computer_ambience = NULL;
+	StopMusicStream(*computer_ambience);
+	computer_ambience = NULL;
 
-    if (IsMusicStreamPlaying(*hdd_ambience)) {
-        StopMusicStream(*hdd_ambience);
-    }
-    hdd_ambience = NULL;
+	if (IsMusicStreamPlaying(*hdd_ambience)) {
+		StopMusicStream(*hdd_ambience);
+	}
+	hdd_ambience = NULL;
 
-    G_Keyboard_Close();
+	G_Keyboard_Close();
 	G_Cursor_Close();
 
 	M_Scenes_Close();
@@ -39,25 +39,25 @@ void G_Close() {
 }
 
 void G_Loop() {
-    while(!WindowShouldClose()) {
+	while(!WindowShouldClose()) {
 		E_Core_HandleMiscInputs();
 
 		E_Core_UpdateCurrentScene();
 
-        G_Cursor_Update();
-        G_Keyboard_Update();
+		G_Cursor_Update();
+		G_Keyboard_Update();
 
 		UpdateMusicStream(*computer_ambience);
 
-        if (hdd_ambience_fade_in) {
-            hdd_ambience_volume += 0.1f * GetFrameTime();
-        } else {
-            hdd_ambience_volume -= 0.1f * GetFrameTime();
-        }
-        hdd_ambience_volume = E_Math_Clamp(hdd_ambience_volume, 0.0f, 1.0f);
-        SetMusicVolume(*hdd_ambience, hdd_ambience_volume);
+		if (hdd_ambience_fade_in) {
+			hdd_ambience_volume += 0.1f * GetFrameTime();
+		} else {
+			hdd_ambience_volume -= 0.1f * GetFrameTime();
+		}
+		hdd_ambience_volume = E_Math_Clamp(hdd_ambience_volume, 0.0f, 1.0f);
+		SetMusicVolume(*hdd_ambience, hdd_ambience_volume);
 
-        UpdateMusicStream(*hdd_ambience);
+		UpdateMusicStream(*hdd_ambience);
 
 		E_Core_StartDrawing();
 			E_Core_DrawCurrentScene();
@@ -65,32 +65,32 @@ void G_Loop() {
 			//DrawFPS(10, 460);
 		E_Core_EndDrawing();
 	}
-    G_Close();
+	G_Close();
 }
 
 void G_Run() {
-    E_Core_Init();
+	E_Core_Init();
 	M_Assets_Init();
 
 	G_Cursor_Init();
-    G_Keyboard_Init();
+	G_Keyboard_Init();
 
 	M_Scenes_Populate();
 	E_Core_SetScene(S_BOOT);
 
 	computer_ambience = (Music*)M_Assets_GetAssetDataByLabel("preload/mus/ambience");
-    hdd_ambience = (Music*)M_Assets_GetAssetDataByLabel("preload/mus/hdd");
+	hdd_ambience = (Music*)M_Assets_GetAssetDataByLabel("preload/mus/hdd");
 	computer_ambience->looping = true;
 
 	PlayMusicStream(*computer_ambience);
-    G_Loop();
+	G_Loop();
 }
 
 void G_HardDriveSound(bool _fade_in) {
-    if (!IsMusicStreamPlaying(*hdd_ambience)) {
-        SetMusicPitch(*hdd_ambience, E_Math_RandomFloat(1.2f, 1.4f));
-        SetMusicPan(*hdd_ambience, E_Math_RandomFloat(0.0f, 0.3f));
-        PlayMusicStream(*hdd_ambience);
-    }
-    hdd_ambience_fade_in = _fade_in;
+	if (!IsMusicStreamPlaying(*hdd_ambience)) {
+		SetMusicPitch(*hdd_ambience, E_Math_RandomFloat(1.2f, 1.4f));
+		SetMusicPan(*hdd_ambience, E_Math_RandomFloat(0.0f, 0.3f));
+		PlayMusicStream(*hdd_ambience);
+	}
+	hdd_ambience_fade_in = _fade_in;
 }
