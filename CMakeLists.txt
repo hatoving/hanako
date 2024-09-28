@@ -21,6 +21,8 @@ include(FetchContent)
     add_subdirectory(${raylib_SOURCE_DIR} ${raylib_BINARY_DIR})
   endif()
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-optimize-sibling-calls -fdiagnostics-color=always -g -O3")
+
 # e_ = Engine
 # s_ = Scene
 # g_ = Game
@@ -36,11 +38,16 @@ add_executable(${PROJECT_NAME}
 
     src/scenes/s_test.c
     src/scenes/s_boot.c
+    src/scenes/s_desktop.c
 
     src/m_global.c
     src/m_assets.c
     src/m_scenes.c
 
+    src/game/desktop/g_desktop_window.c
+    src/game/desktop/g_desktop_windowmanager.c
+
+    src/game/g_state.c
     src/game/g_settings.c
     src/game/g_cursor.c
     src/game/g_keyboard.c

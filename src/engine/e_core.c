@@ -24,7 +24,7 @@ void E_Core_Init() {
 	SetWindowState(FLAG_WINDOW_RESIZABLE);
 	SetTargetFPS(M_BASE_FPS);
 
-	E_Screen_SetFull(G_SETTINGS_CURRENT->fullscreen);
+	E_Screen_SetFull((int)G_SETTINGS_CURRENT->fullscreen);
 	HideCursor();
 
 	E_SCREEN_TEX = LoadRenderTexture(M_BASE_WIDTH, M_BASE_HEIGHT);

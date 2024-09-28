@@ -5,6 +5,7 @@
 #include "../m_assets.h"
 
 #include "g_keyboard.h"
+#include "g_settings.h"
 
 Sound* keyboard_click = NULL;
 
@@ -17,6 +18,7 @@ void G_Keyboard_Update() {
 	for (int i = 32; i < 350; i++) {
 		if (IsKeyPressed(i)) {
 			SetSoundPitch(*keyboard_click, E_Math_RandomFloat(0.9f, 1.2f));
+			SetSoundVolume(*keyboard_click, G_SETTINGS_CURRENT->sfx_volume);
 			PlaySound(*keyboard_click);
 		}
 	}

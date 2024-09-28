@@ -1,6 +1,7 @@
 #include "s_boot.h"
 
 #include "../game/g_game.h"
+#include "../m_scenes.h"
 #include "../game/g_cursor.h"
 
 #include "../m_global.h"
@@ -142,7 +143,7 @@ void S_BootUpdate() {
 				}
 				case 1: {
 					if (!wait_for_timer) {
-						AddTextToScreenOutput("(press ENTER to skip)\n\n\t\t\t\t\t\tTrophy Personal BIOS v2.34\n\t\t\t\t\t\tCopyright (C) 1987-94 Trophy Software\n\n");
+						AddTextToScreenOutput("~\n\t\tPress ENTER to skip...\n\t\tPress BACKSPACE to switch save slots...\n~\n\n\t\t\t\t\t\tTrophy Personal BIOS v2.34\n\t\t\t\t\t\tCopyright (C) 1987-94 Trophy Software\n\n");
 						PlaySound(*beep_sound);
 					}
 					WaitForTimer(1.0f);
@@ -254,7 +255,7 @@ void S_BootUpdate() {
 				case 2: {
 					G_HardDriveSound(false);
 					G_Cursor_SetVisibility(true);
-					E_Core_SetScene(NULL);
+					E_Core_SetScene(S_DESKTOP);
 					break;
 				}
 			}
@@ -284,7 +285,7 @@ void S_BootDraw() {
 		}
 		case (int)SUBSCENE_INTRO: {
 			if (current_step >= 1 && trophy_graphic != NULL) {
-				DrawTexture(*trophy_graphic, 16, 43, WHITE);
+				DrawTexture(*trophy_graphic, 16, 87, WHITE);
 			}
 			DrawTextEx(system_font != NULL ? *system_font : GetFontDefault(), screen_output, (Vector2){15, 15}, 16, 0, GRAY);
 			break;

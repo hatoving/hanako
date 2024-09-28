@@ -3,6 +3,7 @@
 #include "g_keyboard.h"
 #include "g_settings.h"
 #include "g_cursor.h"
+#include "g_state.h"
 
 #include "../m_global.h"
 #include "../m_assets.h"
@@ -80,6 +81,8 @@ void G_Run() {
 	G_Keyboard_Init();
 
 	M_Scenes_Populate();
+	G_State_Load(G_SETTINGS_CURRENT->last_save_slot_used);
+
 	E_Core_SetScene(S_BOOT);
 
 	computer_ambience = (Music*)M_Assets_GetAssetDataByLabel("preload/mus/ambience");

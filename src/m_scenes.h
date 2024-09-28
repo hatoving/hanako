@@ -5,6 +5,7 @@
 
 extern E_Scene* S_TEST;
 extern E_Scene* S_BOOT;
+extern E_Scene* S_DESKTOP;
 
 void M_Scenes_Populate();
 void M_Scenes_Close();

@@ -20,8 +20,9 @@ E_AssetDescriptor asset_info_table[] = {
 	{ "preload/snd/keyboard_click", "%s/preload/sounds/keyboard_click.ogg", E_ASSET_TYPE_SOUND, true },
 
 	{ "preload/fnt/system", "%s/preload/fonts/system.ttf", E_ASSET_TYPE_FONT, true },
+	{ "preload/fnt/desktop_bi", "%s/preload/fonts/desktop_bi.otf", E_ASSET_TYPE_FONT, true },
 
-		/* preload assets ~~ borders */
+	/* preload assets ~~ borders */
 	{ "preload/gfx/borders/1", "%s/preload/graphics/borders/simple.png", E_ASSET_TYPE_TEXTURE, true },
 
 	/* boot sequence */
@@ -29,6 +30,15 @@ E_AssetDescriptor asset_info_table[] = {
 	{ "boot/gfx/trophy", "%s/boot/graphics/trophy.png", E_ASSET_TYPE_TEXTURE, false },
 	{ "boot/gfx/starlight_bg", "%s/boot/graphics/loading.png", E_ASSET_TYPE_TEXTURE, false },
 	{ "boot/gfx/starlight_loadbar", "%s/boot/graphics/loading_bar.png", E_ASSET_TYPE_TEXTURE, false },
+
+	/* desktop */
+	{ "desktop/gfx/window", "%s/desktop/graphics/window.png", E_ASSET_TYPE_TEXTURE, false },
+
+	/* desktop bgs */
+	{ "desktop/gfx/bgs/0", "%s/desktop/graphics/backgrounds/night.png", E_ASSET_TYPE_TEXTURE, false },
+
+	/* desktop icons */
+	{ "desktop/gfx/icons/h_installer", "%s/desktop/graphics/icons/h_installer.png", E_ASSET_TYPE_TEXTURE, false }
 };
 
 E_Asset** assets = NULL;

@@ -26,7 +26,17 @@ void G_Settings_Load() {
 	if (settings_file != NULL) {
 		printf("G: Found settings file at \"%s\". Reading...\n", path);
 
-		fread(G_SETTINGS_CURRENT, sizeof(G_Settings), 1, settings_file);
+		G_SETTINGS_CURRENT = (G_Settings*)malloc(sizeof(G_Settings));
+		if (fread(G_SETTINGS_CURRENT, sizeof(G_Settings), 1, settings_file) != 1) {
+			printf("G: Error - Failed to read settings from file.\n");
+			fclose(settings_file);
+
+			free(G_SETTINGS_CURRENT);
+			G_SETTINGS_CURRENT = G_Settings_CreateDefault();
+			G_Settings_Save();
+
+			return;
+		}
 		fclose(settings_file);
 	} else {
 		printf("G: No settings file found. Creating default...\n", path);
@@ -49,6 +59,7 @@ G_Settings* G_Settings_CreateDefault() {
 	settings->billnear_filtering = false;
 	settings->fullscreen = false;
 
+	settings->last_save_slot_used = 0;
 	return settings;
 }
 

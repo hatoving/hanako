@@ -8,6 +8,7 @@
 #include "../m_global.h"
 
 #include "g_cursor.h"
+#include "g_settings.h"
 
 bool show = true;
 
@@ -26,6 +27,7 @@ void G_Cursor_Update() {
 	for (int i = 0; i < MOUSE_BUTTON_BACK; i++) {
 		if (IsMouseButtonPressed(i)) {
 			SetSoundPitch(*mouse_click, E_Math_RandomFloat(0.9f, 1.2f));
+			SetSoundVolume(*mouse_click, G_SETTINGS_CURRENT->sfx_volume);
 			PlaySound(*mouse_click);
 		}
 	}
@@ -38,8 +40,8 @@ void G_Cursor_Draw() {
 		G_CURSOR_X = (GetMouseX() - offsetX) / E_SCREEN_SCALE_X;
 		G_CURSOR_Y = (GetMouseY() - offsetY) / E_SCREEN_SCALE_Y;
 
-		G_CURSOR_X = E_Math_Clamp(G_CURSOR_X, 0, 640);
-		G_CURSOR_Y = E_Math_Clamp(G_CURSOR_Y, 0, 480);
+		G_CURSOR_X = E_Math_Clamp(G_CURSOR_X, 0, M_BASE_WIDTH);
+		G_CURSOR_Y = E_Math_Clamp(G_CURSOR_Y, 0, M_BASE_HEIGHT);
 
 		DrawTextureEx(*mouse_tex, (Vector2){(int)G_CURSOR_X, (int)G_CURSOR_Y}, 0.0f, 1.0f, WHITE);
 	}
