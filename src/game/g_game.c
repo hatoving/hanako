@@ -68,7 +68,6 @@ void G_Loop() {
 			//DrawFPS(10, 460);
 		E_Core_EndDrawing();
 	}
-	G_Close();
 }
 
 void G_Run() {
@@ -83,7 +82,7 @@ void G_Run() {
 	M_Scenes_Populate();
 	G_State_Load(G_SETTINGS_CURRENT->last_save_slot_used);
 
-	E_Core_SetScene(S_BOOT);
+	E_Core_SetScene(S_DESKTOP);
 
 	computer_ambience = (Music*)M_Assets_GetAssetDataByLabel("preload/mus/ambience");
 	hdd_ambience = (Music*)M_Assets_GetAssetDataByLabel("preload/mus/hdd");
@@ -91,6 +90,9 @@ void G_Run() {
 
 	PlayMusicStream(*computer_ambience);
 	G_Loop();
+
+	G_Settings_Save(); /* save any settings before performing close */
+	G_Close();
 }
 
 void G_HardDriveSound(bool _fade_in) {
