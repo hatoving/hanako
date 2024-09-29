@@ -3,6 +3,7 @@
 
 #include <raylib.h>
 #include <stdlib.h>
+
 #include "../g_cursor.h"
 
 G_Desktop_Window* G_Desktop_Window_Create(int x, int y, int w, int h, char* title, char* icon_title, Texture2D* tex) {
@@ -24,6 +25,17 @@ G_Desktop_Window* G_Desktop_Window_Create(int x, int y, int w, int h, char* titl
 	M_Assets_LoadAssetByLabel(TextFormat("desktop/gfx/icons/%s", icon_title));
 	window->icon_ptr = (Texture2D*)M_Assets_GetAssetDataByLabel(TextFormat("desktop/gfx/icons/%s", icon_title));
 	window->icon_title = icon_title;
+
+	window->close_button = G_Button_Create(
+		(G_ButtonFrameInfo){
+			0, 0, 1,
+			(Vector2){11.0f, 11.0f},
+			2
+		},
+		(Vector2){0, 0},
+		(Vector2){0, 0},
+		"desktop/gfx/window/buttons/close"
+	);
 
 	return window;
 }
@@ -56,6 +68,8 @@ void G_Desktop_Window_Update(G_Desktop_Window* window) {
 			dragging = false;
 		}
 	}
+	G_Button_Update(window->close_button);
+
 	if (window->post_update_function != NULL)
 		window->post_update_function();
 }
@@ -78,11 +92,17 @@ void G_Desktop_Window_Draw(G_Desktop_Window* window) {
 
 	if (window->icon_ptr != NULL)
 		DrawTexture(*window->icon_ptr, window->x + 10, window->y + 8, WHITE);
+
+	window->close_button->pos = (Vector2){(window->x + window->w) - 22, window->y + 10};
+	G_Button_Draw(window->close_button);
+
 	if (window->post_draw_function != NULL)
 		window->post_draw_function();
+
 }
 
 void G_Desktop_Window_Close(G_Desktop_Window* window) {
+	G_Button_Close(window->close_button);
 	M_Assets_CloseAssetByLabel(TextFormat("desktop/gfx/icons/%s", window->icon_title));
 	free(window);
 }

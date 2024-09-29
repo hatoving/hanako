@@ -1,6 +1,7 @@
 #ifndef G_DESKTOP_WINDOW_H
 #define G_DESKTOP_WINDOW_H
 
+#include "../g_button.h"
 #include <raylib.h>
 
 typedef struct {
@@ -10,9 +11,12 @@ typedef struct {
 	char* icon_title;
 
 	NPatchInfo info;
+	bool is_closed;
 
 	Texture2D* window_ptr;
 	Texture2D* icon_ptr;
+
+	G_Button* close_button;
 
 	void (*post_update_function)();
 	void (*post_draw_function)();

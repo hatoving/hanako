@@ -33,6 +33,7 @@ E_AssetDescriptor asset_info_table[] = {
 
 	/* desktop */
 	{ "desktop/gfx/window", "%s/desktop/graphics/window.png", E_ASSET_TYPE_TEXTURE, false },
+	{ "desktop/gfx/window/buttons/close", "%s/desktop/graphics/window_close.png", E_ASSET_TYPE_TEXTURE, false },
 
 	/* desktop bgs */
 	{ "desktop/gfx/bgs/0", "%s/desktop/graphics/backgrounds/night.png", E_ASSET_TYPE_TEXTURE, false },
