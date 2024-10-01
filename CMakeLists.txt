@@ -50,9 +50,13 @@ add_executable(${PROJECT_NAME}
     src/game/g_keyboard.c
     src/game/g_button.c
     src/game/g_game.c
-
+  
+    src/game/desktop/g_desktop_assets.c
+    src/game/desktop/g_desktop_icons.c
     src/game/desktop/g_desktop_window.c
     src/game/desktop/g_desktop_windowmanager.c
+
+    src/game/desktop/windows/g_desktop_windows_hanakocd.c
 
     src/m_main.c
 )

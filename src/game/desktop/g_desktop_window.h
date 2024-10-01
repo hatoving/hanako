@@ -18,14 +18,19 @@ typedef struct {
 
 	G_Button* close_button;
 
-	void (*post_update_function)();
-	void (*post_draw_function)();
+	void (*post_update_function)(void* data);
+	void* post_update_data;
+
+	void (*post_draw_function)(void* data);
+	void* post_draw_data;
+
+	void (*post_close_function)(void* data);
+	void* post_close_data;
 } G_Desktop_Window;
 
-G_Desktop_Window* G_Desktop_Window_Create(int x, int y, int w, int h, char* title, char* icon_name, Texture2D* tex);
+G_Desktop_Window* G_Desktop_Window_Create(int x, int y, int w, int h, char* title, char* icon_name);
 void G_Desktop_Window_Draw(G_Desktop_Window* window);
 void G_Desktop_Window_Update(G_Desktop_Window* window);
 void G_Desktop_Window_Close(G_Desktop_Window* window);
-
 
 #endif

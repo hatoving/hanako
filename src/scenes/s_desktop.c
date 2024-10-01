@@ -2,38 +2,35 @@
 #include "../m_assets.h"
 
 #include "../game/g_cursor.h"
+
+#include "../game/desktop/g_desktop_icons.h"
+#include "../game/desktop/g_desktop_assets.h"
 #include "../game/desktop/g_desktop_window.h"
 #include "../game/desktop/g_desktop_windowmanager.h"
+
+#include "../game/desktop/windows/g_desktop_windows_hanakocd.h"
 
 #include <raylib.h>
 #include <stdio.h>
 
-Texture2D* window_background;
-
 int current_background;
 Texture2D* desktop_background;
 
-G_Desktop_Window* installer_window, *window;
 G_Desktop_WindowManager* manager;
+G_Desktop_Windows_HanakoCD* cd_launcher_window;
 
 void S_DesktopInit() {
-	M_Assets_LoadAssetByLabel("desktop/gfx/window");
-	window_background = (Texture2D*)M_Assets_GetAssetDataByLabel("desktop/gfx/window");
+	G_Desktop_Assets_Init();
+	G_Desktop_Icons_Init();
 
-	M_Assets_LoadAssetByLabel("desktop/gfx/bgs/0");
 	desktop_background = (Texture2D*)M_Assets_GetAssetDataByLabel("desktop/gfx/bgs/0");
-
 	manager = G_Desktop_WindowManager_Create();
 
-	installer_window = G_Desktop_Window_Create(40, 40, 280, 180, "Hanako v. b. 98.0.1.", "h_installer", window_background);
-	window = G_Desktop_Window_Create(60, 70, 100, 100, "lol", "h_installer", window_background);
-
-	G_Desktop_WindowManager_AddWindow(installer_window, manager);
-	G_Desktop_WindowManager_AddWindow(window, manager);
+	cd_launcher_window = G_Desktop_Windows_HanakoCD_Create();
+	G_Desktop_WindowManager_AddWindow(cd_launcher_window->window, manager);
 }
 
 void S_DesktopUpdate() {
-	//G_Desktop_Window_Update(window);
 	G_Desktop_WindowManager_Update(manager);
 }
 
@@ -44,11 +41,12 @@ void S_DesktopDraw() {
 }
 
 void S_DesktopClose() {
-	G_Desktop_Window_Close(installer_window);
+	G_Desktop_WindowManager_Close(manager);
 
 	M_Assets_CloseAssetByLabel("desktop/gfx/window");
-	window_background = NULL;
-
 	M_Assets_CloseAssetByLabel("desktop/gfx/bgs/0");
 	desktop_background = NULL;
+
+	G_Desktop_Icons_Close();
+	G_Desktop_Assets_Close();
 }

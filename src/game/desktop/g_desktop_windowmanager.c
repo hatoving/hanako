@@ -27,12 +27,27 @@ void G_Desktop_WindowManager_BringToFront(G_Desktop_WindowManager* manager, int 
     manager->windows[manager->window_count - 1] = window;
 }
 
+void G_Window_Manager_RemoveWindow(G_Desktop_WindowManager* manager, int index) {
+    G_Desktop_Window* window = manager->windows[index];
+    G_Desktop_Window_Close(window);
+
+    for (int i = index; i < manager->window_count - 1; i++) {
+        manager->windows[i] = manager->windows[i + 1];
+    }
+    manager->window_count--;
+}
+
 void G_Desktop_WindowManager_Update(G_Desktop_WindowManager* manager) {
     Vector2 mouse_position = (Vector2){G_CURSOR_X, G_CURSOR_Y};
     bool window_clicked = false;
 
     for (int i = manager->window_count - 1; i >= 0; i--) {
         G_Desktop_Window* window = manager->windows[i];
+
+		if (window->is_closed) {
+            G_Window_Manager_RemoveWindow(manager, i);
+            continue;
+        }
 
         Rectangle window_rect = {
             window->x,

@@ -39,7 +39,10 @@ E_AssetDescriptor asset_info_table[] = {
 	{ "desktop/gfx/bgs/0", "%s/desktop/graphics/backgrounds/night.png", E_ASSET_TYPE_TEXTURE, false },
 
 	/* desktop icons */
-	{ "desktop/gfx/icons/h_installer", "%s/desktop/graphics/icons/h_installer.png", E_ASSET_TYPE_TEXTURE, false }
+	{ "desktop/gfx/icons/h_installer", "%s/desktop/graphics/icons/h_installer.png", E_ASSET_TYPE_TEXTURE, false },
+
+	/* windows - cd installer */
+	{ "desktop/gfx/windows/hanakocd/promo", "%s/desktop/graphics/windows/hanako_cd/promo.png", E_ASSET_TYPE_TEXTURE, false }
 };
 
 E_Asset** assets = NULL;
