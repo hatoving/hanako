@@ -6,14 +6,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-G_Button* G_Button_Create(G_ButtonFrameInfo info, Vector2 pos, Vector2 pivot, Texture2D* texture) {
+G_Button* G_Button_Create(G_ButtonFrameInfo info, Vector2 pos, Texture2D* texture) {
 	G_Button* button = (G_Button*)malloc(sizeof(G_Button));
 
 	button->frame_info = info;
 	button->pos = pos;
-	button->pivot = pivot;
-
 	button->texture = texture;
+
+	button->click_callback = NULL;
+	button->click_callback_data = NULL;
+
 	return button;
 }
 
@@ -51,9 +53,10 @@ void G_Button_Draw(G_Button* button) {
 	int frame = 0;
 
 	if (button->hovering) frame = button->frame_info.hover_frame;
-	else if (button->clicked) frame = button->frame_info.press_frame;
 	else frame = button->frame_info.idle_frame;
-
+	if (button->clicked) frame = button->frame_info.press_frame;
+	else frame = button->frame_info.idle_frame;
+	
 	DrawTextureRec(
 		*button->texture,
 		(Rectangle){

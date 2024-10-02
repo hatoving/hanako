@@ -49,6 +49,7 @@ add_executable(${PROJECT_NAME}
     src/game/g_cursor.c
     src/game/g_keyboard.c
     src/game/g_button.c
+    src/game/g_button_label.c
     src/game/g_game.c
   
     src/game/desktop/g_desktop_assets.c

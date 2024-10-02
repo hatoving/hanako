@@ -39,7 +39,6 @@ G_Desktop_Window* G_Desktop_Window_Create(int x, int y, int w, int h, char* titl
 			2
 		},
 		(Vector2){0, 0},
-		(Vector2){0, 0},
 		(Texture2D*)M_Assets_GetAssetDataByLabel("desktop/gfx/window/buttons/close")
 	);
 	window->close_button->click_callback = G_Desktop_Window_OnCloseClick;

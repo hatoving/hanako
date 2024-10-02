@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 const char* G_DESKTOP_ICONLABELS[] = {
-	"h_installer"
+	"cd"
 };
 
 void G_Desktop_Icons_Init() {

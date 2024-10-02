@@ -1,6 +1,7 @@
 #include "s_desktop.h"
 #include "../m_assets.h"
 
+#include "../game/g_button_label.h"
 #include "../game/g_cursor.h"
 
 #include "../game/desktop/g_desktop_icons.h"
@@ -35,16 +36,16 @@ void S_DesktopUpdate() {
 }
 
 void S_DesktopDraw() {
-	ClearBackground(BLACK);
+	ClearBackground(WHITE);
 	DrawTexture(*desktop_background, 0, 0, WHITE);
+	
 	G_Desktop_WindowManager_Draw(manager);
 }
 
 void S_DesktopClose() {
 	G_Desktop_WindowManager_Close(manager);
-
-	M_Assets_CloseAssetByLabel("desktop/gfx/window");
 	M_Assets_CloseAssetByLabel("desktop/gfx/bgs/0");
+
 	desktop_background = NULL;
 
 	G_Desktop_Icons_Close();

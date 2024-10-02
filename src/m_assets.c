@@ -21,6 +21,7 @@ E_AssetDescriptor asset_info_table[] = {
 
 	{ "preload/fnt/system", "%s/preload/fonts/system.ttf", E_ASSET_TYPE_FONT, true },
 	{ "preload/fnt/desktop_bi", "%s/preload/fonts/desktop_bi.otf", E_ASSET_TYPE_FONT, true },
+	{ "preload/fnt/desktop_i", "%s/preload/fonts/desktop_i.otf", E_ASSET_TYPE_FONT, true },
 
 	/* preload assets ~~ borders */
 	{ "preload/gfx/borders/1", "%s/preload/graphics/borders/simple.png", E_ASSET_TYPE_TEXTURE, true },
@@ -34,12 +35,13 @@ E_AssetDescriptor asset_info_table[] = {
 	/* desktop */
 	{ "desktop/gfx/window", "%s/desktop/graphics/window.png", E_ASSET_TYPE_TEXTURE, false },
 	{ "desktop/gfx/window/buttons/close", "%s/desktop/graphics/window_close.png", E_ASSET_TYPE_TEXTURE, false },
+	{ "desktop/gfx/window/buttons/generic", "%s/desktop/graphics/window_button.png", E_ASSET_TYPE_TEXTURE, false },
 
 	/* desktop bgs */
 	{ "desktop/gfx/bgs/0", "%s/desktop/graphics/backgrounds/night.png", E_ASSET_TYPE_TEXTURE, false },
 
 	/* desktop icons */
-	{ "desktop/gfx/icons/h_installer", "%s/desktop/graphics/icons/h_installer.png", E_ASSET_TYPE_TEXTURE, false },
+	{ "desktop/gfx/icons/cd", "%s/desktop/graphics/icons/cd.png", E_ASSET_TYPE_TEXTURE, false },
 
 	/* windows - cd installer */
 	{ "desktop/gfx/windows/hanakocd/promo", "%s/desktop/graphics/windows/hanako_cd/promo.png", E_ASSET_TYPE_TEXTURE, false }

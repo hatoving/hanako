@@ -15,7 +15,7 @@ typedef struct {
 	Texture2D* texture;
 	char* texture_label;
 
-	Vector2 pos, pivot;
+	Vector2 pos;
 
 	bool clicked;
 	bool hovering;
@@ -23,7 +23,7 @@ typedef struct {
 	void (*click_callback)(void* data);
 	void* click_callback_data;
 } G_Button;
-G_Button* G_Button_Create(G_ButtonFrameInfo info, Vector2 pos, Vector2 pivot, Texture2D* texture);
+G_Button* G_Button_Create(G_ButtonFrameInfo info, Vector2 pos, Texture2D* texture);
 
 void G_Button_Update(G_Button* button);
 void G_Button_Draw(G_Button* button);

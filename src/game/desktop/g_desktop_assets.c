@@ -7,6 +7,7 @@
 const char* G_DESKTOP_LABELS[] = {
 	"desktop/gfx/window",
 	"desktop/gfx/bgs/0",
+	"desktop/gfx/window/buttons/generic",
 	"desktop/gfx/window/buttons/close"
 };
 
